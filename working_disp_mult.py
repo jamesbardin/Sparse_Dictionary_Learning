@@ -57,7 +57,7 @@ def reconstruct_images(D, Z, data_mean, data_std, n_atoms):
     return reconstructed_images
 
 
-# Load images and convert them to grayscale
+# Load images and convert to graysacle
 images_folder = args.images_folder
 images = read_images(images_folder)
 
@@ -72,23 +72,23 @@ D = D_init
 
 fig, axs = plt.subplots(nrows=len(images), ncols=2+len(n_atoms_list) - 1, figsize=(12, 10))
 
-# Loop over the images
+# Loop over the imgs
 for i, img in enumerate(images):
-    # Display the original
+    # Display original img
     axs[i, 0].imshow(img, cmap='gray')
     axs[i, 0].axis('off')
     axs[i, 0].set_title('Original')
 
-    # Loop over different numbers of atoms and display
+    # Loop over different numbers of atoms and display each
     for j, n_atoms in enumerate(n_atoms_list):
         # Sparse coding and dictionary update
         Z = np.dot(np.linalg.pinv(D[:, :n_atoms]), X)
         D[:, :n_atoms] = update_dictionary(D[:, :n_atoms], Z, X)
 
-        # Reconstruct the images using the learned dictionary
+        # Reconstruct the imgs using learned dictionary
         reconstructed_images = reconstruct_images(D, Z, X_mean, X_std, n_atoms)
 
-        # Plot the reconstructed images
+        # Plot reconstructed images
         axs[i, j+1].imshow(reconstructed_images[i], cmap='gray')
         axs[i, j+1].axis('off')
         axs[i, j+1].set_title('Reconst. atoms={}'.format(n_atoms))
