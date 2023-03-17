@@ -1,0 +1,12 @@
+name: sparse-dictionary-learning
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy
+  - matplotlib
+  - imageio
+  - opencv
+  - pip
+  - pip:
+    - argparse

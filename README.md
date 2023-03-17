@@ -1,6 +1,9 @@
 # Sparse Dictionary Learning
 #### James Bardin
 
+To install the running environment navigate to the directory with the yaml and run:
+
+conda env create -f .\environment.yml -n sparse_dictionary_learning
 
 usage: python .\working_disp_mult.py [--n_atoms_list n_atoms_list [n_atoms_list ...]] images_folder
 
