@@ -3,6 +3,15 @@ import matplotlib.pyplot as plt
 import os
 import imageio.v3 as imageio
 import cv2
+import argparse
+
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Sparse dictionary learning')
+parser.add_argument('images_folder', metavar='images_folder', type=str,
+                    help='Path to the folder containing images')
+parser.add_argument('--n_atoms_list', metavar='n_atoms_list', type=int, nargs='+', default=[1, 2, 5, 10, 20, 50],
+                    help='List of numbers of atoms to use for reconstruction')
+args = parser.parse_args()
 
 # Read images from a folder into a list and convert them to grayscale.
 def read_images(folder_path):
@@ -49,14 +58,15 @@ def reconstruct_images(D, Z, data_mean, data_std, n_atoms):
 
 
 # Load images and convert them to grayscale
-images_folder = "C:/Sparse_Dictionary_Learning/images/"
+images_folder = args.images_folder
 images = read_images(images_folder)
+
 
 # Normalize the data
 X, X_mean, X_std = normalize_data(np.column_stack([img.flatten() for img in images]))
 
 # Initialize a dictionary of random atoms
-n_atoms_list = [1, 2, 5, 10, 20, 50]  # number of atoms to use for reconstruction
+n_atoms_list = args.n_atoms_list
 D_init = np.random.randn(X.shape[0], n_atoms_list[-1])
 D = D_init
 
@@ -72,7 +82,6 @@ for i, img in enumerate(images):
     # Loop over different numbers of atoms and display
     for j, n_atoms in enumerate(n_atoms_list):
         # Sparse coding and dictionary update
-        # Compute sparse code matrix
         Z = np.dot(np.linalg.pinv(D[:, :n_atoms]), X)
         D[:, :n_atoms] = update_dictionary(D[:, :n_atoms], Z, X)
 
