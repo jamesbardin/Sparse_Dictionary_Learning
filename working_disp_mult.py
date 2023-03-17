@@ -13,7 +13,7 @@ parser.add_argument('--n_atoms_list', metavar='n_atoms_list', type=int, nargs='+
                     help='List of numbers of atoms to use for reconstruction')
 args = parser.parse_args()
 
-# Read images from a folder into a list and convert them to grayscale.
+# Read img from a folder into a list, convert to grayscale
 def read_images(folder_path):
     images = []
     for filename in os.listdir(folder_path):
@@ -24,7 +24,7 @@ def read_images(folder_path):
         images.append(img)
     return images
 
-# Normalize data to have zero mean and unit variance
+# Normalize data to zero mean and unit variance
 def normalize_data(data):
     data_mean = np.mean(data, axis=0)
     data_std = np.std(data, axis=0)
