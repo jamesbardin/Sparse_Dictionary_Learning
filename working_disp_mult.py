@@ -65,7 +65,7 @@ images = read_images(images_folder)
 # Normalize the data
 X, X_mean, X_std = normalize_data(np.column_stack([img.flatten() for img in images]))
 
-# Initialize a dictionary of random atoms
+# Initialize a random dictionary
 n_atoms_list = args.n_atoms_list
 D_init = np.random.randn(X.shape[0], n_atoms_list[-1])
 D = D_init
