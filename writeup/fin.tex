@@ -1,0 +1,81 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{lipsum}
+
+\newenvironment{myindentpar}[1]%
+{\begin{list}{}%
+         {\setlength{\leftmargin}{#1}}%
+         \item[]%
+}
+{\end{list}}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\np}{\mathop{\rm NP}}
+%\newcommand{\binom}[2]{{#1 \choose #2}}
+
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\vol}{\mathop{\rm Vol}}
+\newcommand{\conp}{\mathop{\rm co-NP}}
+\newcommand{\atisp}{\mathop{\rm ATISP}}
+\renewcommand{\vec}[1]{{\mathbf #1}}
+\newcommand{\cupdot}{\mathbin{\mathaccent\cdot\cup}}
+\newcommand{\mmod}[1]{\ (\mathrm{mod}\ #1)}
+
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0in}
+
+\begin{document}
+
+The code is implementing Sparse Dictionary Learning (SDL), which is an unsupervised machine learning technique used for data compression and feature extraction. It involves representing each data point as a sparse linear combination of a few dictionary atoms and learning a dictionary of atoms that best approximates the data.
+
+\section{Main vars}
+
+First we will define some of the variables for clarification:
+\begin{enumerate}
+
+    \item
+    $X$: original data matrix containing all images, each image is represented as a column vector.
+    \item
+    $X_{normalized}$: normalized data matrix, obtained by subtracting the mean of each column/image from the data and then dividing it by its std dev.
+    \item
+    $D$: dictionary matrix, contains a set of basis vectors that can be linearly combined to reconstruct the images. 
+    \item
+    $Z$: sparse coding matrix, contains sparse coefficients that represent each image as a linear combination of a few dictionary atoms. We calculate this with the following equation:
+
+    $$\underset{Z}{\operatorname{argmin}} ||X - DZ||^2_2 + \lambda ||Z||_1$$
+
+    where $||.||_2$ and $||.||_1$ are the $L_2$ and $L_1$ norms. This equation has the least squares term and the LASSO penalty. So, $\lambda$ is a param that control the strength of the penalty. 
+    \item
+    $I_j$: set of indices corresponding to the non-zero elements in the $j$th column of $Z$, notes which dictionary atoms are used to represent the $j$th image.
+    \item
+    $D_j$: $j$th column of the dictionary matrix
+    \item
+    $R_j$: residual error matrix for $j$th image, obtained by subtracting the contribution of all other dictionary atoms from the original data. It is used to update the $j$th atom.
+    \item
+    $n_{atoms}$: the number of atoms used to reconstruct each image.
+    \item
+    $reconstructed\_data:$ the reconstructed data matrix, which is obtained by multiplying the dictionary matrix by the sparse coding matrix and then denormalizing the data.
+    \item
+    $reconstructed\_images:$ the reconstructed images, which are obtained by reshaping each column of the reconstructed data matrix back into the original image shape.
+\end{enumerate}
+
+\section{Future}
+
+Because of lack to time, currently the program only works for input images of the same dimensions. So, I would add more preprocessing steps to crop or resize images so that they are the same dimensions for dictionary creation. 
+
+I would also like to add the ability to automatically determine the optimal number of atoms. I thought about the possibility of doing this using calcualted residual error. But, an issue with that might be that different data might be visually differentiable with higher residuals than others, so it might not be a perfect solution.
+
+The algorithm that updates the dictionary is pretty elementary. It would be fun to implement other dictionary update algorthms that I've read about like online dictionary learning. 
+
+I never had issues with runtime because of the preprocessing and the small data input, but if this became an issue I could have used CUDA to send some of the operations to my GPU. Also, I could have parallelized some of the loops that wouldn't have had issues with race conditions or shared memory. 
+
+Also, I could implement alternative dictionary learning algorithms, like the ones in the prompt and etc.
+
+
+\end{document}
